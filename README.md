@@ -1,12 +1,3 @@
-<div align="center">
-  <img alt="Uber Pipeline" src="https://img.shields.io/badge/Uber%20Data%20Pipeline-000000?style=for-the-badge&logo=uber&logoColor=white" />
-  <br/>
-  <h1>Data Infrastructure & Orchestration</h1>
-  <p><b>An enterprise-grade, highly-available, end-to-end data lakehouse pipeline for ride-share telemetry.</b></p>
-  <br/>
-<div align="center">
-<div align="center">
-
 <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=28&pause=1000&color=3B82F6&center=true&vCenter=true&width=600&lines=Uber+Trip+Analytics+Pipeline" alt="Typing SVG" />
 
 ### End-to-end cloud data pipeline — ingestion, transformation, warehousing & orchestration
