@@ -1,108 +1,97 @@
 <div align="center">
+  <img alt="Uber Pipeline" src="https://img.shields.io/badge/Uber%20Data%20Pipeline-000000?style=for-the-badge&logo=uber&logoColor=white" />
+  <br/>
+  <h1>Data Infrastructure & Orchestration</h1>
+  <p><b>An enterprise-grade, highly-available, end-to-end data lakehouse pipeline for ride-share telemetry.</b></p>
+  <br/>
 
 
-  <img src="https://img.shields.io/badge/DATA_ENGINEERING-UBER_PIPELINE-0071e3?style=for-the-badge&logo=uber&logoColor=white" />
-
-
-  <h1>🚀 Uber Trip Analytics Pipeline</h1>
-
-
-  <p><b>An enterprise-grade, end-to-end data lakehouse pipeline orchestrating raw trip data into business-ready analytics.</b></p>
-
-
-<a href="https://subhiksharavichandran.github.io/uber-trip-pipeline/"><b>➔ View Live Interactive Dashboard & Case Study</b></a>
-
-<br/><br/>
-
-GIF_PLACEHOLDER
-
+Interactive Dashboard 
+  
+Python 3.9+ 
+Status
 </div>
 
 
-<br>
+<br/>
 
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/Apache_Airflow-017CEE?style=for-the-badge&logo=Apache-Airflow&logoColor=white" />
-  <img src="https://img.shields.io/badge/dbt-FF694B?style=for-the-badge&logo=dbt&logoColor=white" />
-  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" />
-  <img src="https://img.shields.io/badge/Amazon_S3-569A31?style=for-the-badge&logo=amazon-s3&logoColor=white" />
-</div>
+🏗️ System Architecture
 
+This project processes over 10,000+ daily ride-share telemetry logs, taking raw disjointed CSVs and refining them through a strict Medallion Architecture. The entire directed acyclic graph (DAG) is orchestrated by Apache Airflow.
 
-<br>
+graph TD
+    subgraph Data Lake [AWS S3 Cloud Storage]
+        A[(Raw Bronze)] -->|"Clean & Standardize \n (Pandas)"| B[(Validated Silver)]
+    end
 
+    subgraph Data Warehouse [PostgreSQL Server]
+        B -->|"Aggregate \n (PySpark)"| C[(Business Gold)]
+        C -->|"Schema Integrity \n (dbt)"| D[(Analyzed Fact/Dim)]
+    end
 
-💡 Executive Summary
-This robust architecture processes 10,000+ daily Uber trip records. It systematically takes raw, disjointed logs and refines them through a rigid Medallion Architecture (Bronze ➔ Silver ➔ Gold). Orchestrated entirely by Apache Airflow and validated via dbt, the pipeline guarantees zero-defect data routing into a PostgreSQL warehouse for downstream BI analytics.
-⸻
-🎛️ Interactive Architecture Deep-Dive
+    subgraph BI Layer [Serving]
+        D -->|SQL Queries| E[Executive Dashboard]
+    end
 
-(Click on a layer to expand and see what happens inside!)
-
-<details>
-<summary><b>1️⃣ 🥉 The Bronze Layer (Raw Ingestion)</b></summary>
-<br>
-<blockquote>
-Incoming raw Uber CSV datasets are ingested without modification into an AWS S3 Data Lake. This ensures we always have an immutable historical audit trail of the exact data as it arrived.
-</blockquote>
-</details>
-
-
-<details>
-<summary><b>2️⃣ 🥈 The Silver Layer (Standardization)</b></summary>
-<br>
-<blockquote>
-Using <b>Pandas & PySpark</b>, the pipeline drops completely null rows, standardizes timestamp formats (e.g. <code>tpep_pickup_datetime</code>), and casts monetary fields to strict float profiles. The data is now clean, validated, and staged for business aggregation.
-</blockquote>
-</details>
-
-
-<details>
-<summary><b>3️⃣ 🥇 The Gold Layer (Business Logic & Analytics)</b></summary>
-<br>
-<blockquote>
-The final tier aggregates the granular data into wide, dimensional Star-Schema models (e.g. <code>fact_trips</code>, <code>dim_datetime</code>, <code>dim_location</code>). This data is highly optimized for low-latency BI queries and dashboarding.
-</blockquote>
-</details>
+    style Data Lake fill:#fbfbfd,stroke:#d2d2d7,stroke-width:2px;
+    style Data Warehouse fill:#ffffff,stroke:#0071e3,stroke-width:2px;
+    style BI Layer fill:#f5f5f7,stroke:#86868b,stroke-width:2px;
+    
+    style A fill:#a66f44,color:#fff;
+    style B fill:#86868b,color:#fff;
+    style C fill:#f59e0b,color:#000;
 
 ⸻
-⏱️ Airflow DAG (Workflow Orchestration)
+⚙️ Engineering Specs
 
-The entire pipeline is fully automated and runs without human intervention. The DAG executes the following structured workflow:
+1. The Airflow DAG (uber_pipeline.py)
+The pipeline runs without human intervention via an 8-task dependency chain:
+1. generate_remote_data: Ingests latest upstream CSVs.
+2. quality_checks: Asserts payload structure.
+3. upload_s3: Migrates to Bronze bucket.
+4. silver_transform: Handles null-filtering and timestamp normalization.
+5. gold_transform: Calculates zone-based revenue dimensions.
+6. load_postgres: Upserts into the relational database.
+7. dbt_run & dbt_test: Freezes execution if referential tests fail.
 
-1. generate_data: Polls/Receives the newest daily trip logs.
-2. quality_checks: Asserts basic row-count and formatting bounds.
-3. upload_s3: Migrates the raw data to the cloud Bronze bucket.
-4. silver_transform: Executes the Python/Spark cleaning scripts.
-5. gold_transform: Runs aggregation calculations.
-6. load_postgres: Upserts the final metrics into the Data Warehouse.
-7. dbt_run & dbt_test: Executes 7 SQL models and 12 referential integrity tests to guarantee data SLA standards.
+2. Data Build Tool (dbt)
+The warehouse relies on strictly-typed data models:
+- 7 SQL Models: Segmenting fact_trips, dim_temporal, and dim_spatial_zones.
+- 12 SLA Tests: Automatically declining data if anomalies (like negative trip fares or impossible coordinate bounds) are detected.
 ⸻
-📂 Repository Structure
+🚀 Quickstart / Local Execution
+
+To spin up the infrastructure on your local machine:
+
+# 1. Clone the repository
+git clone https://github.com/SubhikshaRavichandran/uber-trip-pipeline.git
+cd uber-trip-pipeline
+
+# 2. Deploy the local Airflow environment
+make airflow-up
+
+# 3. Mount PostgreSQL DB
+docker-compose up -d postgres
+
+# 4. Trigger the initial pipeline run
+airflow dags trigger uber_trip_ingestion_v1
+
+⸻
+📂 Repository Topology
 
 uber-trip-pipeline/
-│
-├── 📁 data/
-│   ├── raw/                 # Local staging for raw CSVs
-│   └── processed/           # Cleaned flat-files before warehouse load
-│
-├── 📁 dags/                 # Apache Airflow orchestration logic
-│   └── uber_pipeline.py     # The main 8-task DAG
-│
-├── 📁 dbt/                  # Data Build Tool models
-│   ├── models/              # fact and dimension SQL models
-│   └── schema.yml           # referential integrity tests
-│
-├── 📄 bronze_to_silver.py   # Cleaning and PySpark transformations
-├── 📄 silver_to_gold.py     # Aggregation algorithms
-├── 📄 dashboard.py          # Dashboarding/BI serving code
-├── 📄 index.html            # Interactive Portfolio Web Application
-└── 📄 README.md             # Project Documentation
+├── data/                    # Local staging (ignored in production)
+├── dags/                    # Apache Airflow definitions
+│   └── uber_pipeline.py     # Core 8-task orchestration logic
+├── dbt/                     # Data Build Tool configurations
+│   ├── models/              # fact and dimension architectures
+│   └── schema.yml           # referential integrity validations
+├── scripts/
+│   ├── bronze_to_silver.py  # Cleaning and PySpark mappings
+│   ├── silver_to_gold.py    # Aggregation algorithms
+│   └── dashboard.py         # App serving code
+└── index.html               # Presentation Website
 
 ⸻
-👨‍💻 Built By
-Subhiksha Ravichandran
-
-Data Engineer | GitHub Profile
+Engineered natively by Subhiksha Ravichandran
