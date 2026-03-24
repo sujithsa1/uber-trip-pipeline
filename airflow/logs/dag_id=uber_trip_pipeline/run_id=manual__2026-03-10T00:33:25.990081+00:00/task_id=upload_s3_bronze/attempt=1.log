@@ -1,0 +1,31 @@
+{"timestamp":"2026-03-10T00:33:29.697005Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2026-03-10T00:33:29.697237Z","level":"info","event":"Filling up the DagBag from /Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","logger":"airflow.models.dagbag.BundleDagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-03-10T00:33:29.700584Z","level":"warning","event":"The `airflow.operators.python.PythonOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.python.PythonOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":2,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:33:29.700627Z","level":"warning","event":"The `airflow.operators.bash.BashOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.bash.BashOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":3,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:33:29.712415Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:29.712557Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:29.712753Z","level":"info","event":"Current task name:upload_s3_bronze","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:29.712811Z","level":"info","event":"Dag name:uber_trip_pipeline","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.427526Z","level":"info","event":"","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428028Z","level":"info","event":"🚀 Uploading to S3 Bronze Layer...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428077Z","level":"info","event":"   Bucket: uber-trip-pipeline-sujith","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428100Z","level":"info","event":"   Date partition: year=2026/month=03/day=09","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428138Z","level":"info","event":"","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428164Z","level":"info","event":"Uploading data/raw/trips.csv → s3://uber-trip-pipeline-sujith/bronze/trips/year=2026/month=03/day=09/trips.csv","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428199Z","level":"info","event":"✅ Uploaded successfully!","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428221Z","level":"info","event":"Uploading data/raw/drivers.csv → s3://uber-trip-pipeline-sujith/bronze/drivers/year=2026/month=03/day=09/drivers.csv","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428247Z","level":"info","event":"✅ Uploaded successfully!","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428283Z","level":"info","event":"Uploading data/raw/customers.csv → s3://uber-trip-pipeline-sujith/bronze/customers/year=2026/month=03/day=09/customers.csv","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428306Z","level":"info","event":"✅ Uploaded successfully!","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428324Z","level":"info","event":"","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428346Z","level":"info","event":"📂 Verifying S3 Bronze Layer contents:","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428365Z","level":"info","event":"   ✅ bronze/customers/year=2026/month=03/day=09/customers.csv (17.8 KB)","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428388Z","level":"info","event":"   ✅ bronze/drivers/year=2026/month=03/day=09/drivers.csv (10.6 KB)","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428410Z","level":"info","event":"   ✅ bronze/trips/year=2026/month=03/day=09/trips.csv (1436.4 KB)","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428428Z","level":"info","event":"","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428582Z","level":"info","event":"🎉 Bronze Layer upload complete!","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428616Z","level":"info","event":"","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.428054Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator","filename":"python.py","lineno":230}
+{"timestamp":"2026-03-10T00:33:30.439057Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.439198Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:30.440264Z","level":"info","event":"Task operator:<Task(PythonOperator): upload_s3_bronze>","logger":"task.stdout"}

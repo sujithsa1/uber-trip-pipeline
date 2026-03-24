@@ -1,0 +1,24 @@
+{"timestamp":"2026-03-10T00:57:59.819508Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2026-03-10T00:57:59.819717Z","level":"info","event":"Filling up the DagBag from /Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","logger":"airflow.models.dagbag.BundleDagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-03-10T00:57:59.823594Z","level":"warning","event":"The `airflow.operators.python.PythonOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.python.PythonOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":2,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:57:59.823645Z","level":"warning","event":"The `airflow.operators.bash.BashOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.bash.BashOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":3,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:57:59.835021Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:57:59.835069Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:57:59.835294Z","level":"info","event":"Current task name:load_postgres","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:57:59.835316Z","level":"info","event":"Dag name:uber_trip_pipeline","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.318795Z","level":"info","event":"🚀 Loading data to PostgreSQL...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.319309Z","level":"info","event":"   ✅ raw_trips: 10000 rows loaded","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.319349Z","level":"info","event":"   ✅ raw_drivers: 200 rows loaded","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.319377Z","level":"info","event":"   ✅ raw_customers: 500 rows loaded","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.319399Z","level":"info","event":"   ✅ gold_daily_summary: 31 rows loaded","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.319419Z","level":"info","event":"   ✅ gold_zone_performance: 8 rows loaded","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.319438Z","level":"info","event":"   ✅ gold_hourly_demand: 24 rows loaded","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.319456Z","level":"info","event":"   ✅ gold_driver_performance: 200 rows loaded","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.319474Z","level":"info","event":"==================================================","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.319495Z","level":"info","event":"🎉 All data loaded to PostgreSQL!","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.319513Z","level":"info","event":"==================================================","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.319530Z","level":"info","event":"","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.320170Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator","filename":"python.py","lineno":230}
+{"timestamp":"2026-03-10T00:58:10.328504Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.328576Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:58:10.329674Z","level":"info","event":"Task operator:<Task(PythonOperator): load_postgres>","logger":"task.stdout"}

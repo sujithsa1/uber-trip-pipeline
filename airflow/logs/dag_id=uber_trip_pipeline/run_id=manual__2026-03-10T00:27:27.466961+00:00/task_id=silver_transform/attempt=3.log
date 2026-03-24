@@ -1,0 +1,26 @@
+{"timestamp":"2026-03-10T00:33:29.664236Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2026-03-10T00:33:29.664479Z","level":"info","event":"Filling up the DagBag from /Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","logger":"airflow.models.dagbag.BundleDagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-03-10T00:33:29.669688Z","level":"warning","event":"The `airflow.operators.python.PythonOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.python.PythonOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":2,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:33:29.669800Z","level":"warning","event":"The `airflow.operators.bash.BashOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.bash.BashOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":3,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:33:29.688273Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:29.688432Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:29.688739Z","level":"info","event":"Current task name:silver_transform","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:29.688786Z","level":"info","event":"Dag name:uber_trip_pipeline","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.032281Z","level":"info","event":"✅ Spark Session started","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034204Z","level":"info","event":"🔄 Processing Trips...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034252Z","level":"info","event":"   Clean trips: 9997 rows","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034275Z","level":"info","event":"   ✅ Trips saved","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034304Z","level":"info","event":"🔄 Processing Drivers...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034324Z","level":"info","event":"   Columns: ['driver_id', 'driver_name', 'vehicle_type', 'city', 'join_date', 'driver_rating']","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034352Z","level":"info","event":"   Clean drivers: 200 rows","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034375Z","level":"info","event":"   ✅ Drivers saved","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034399Z","level":"info","event":"🔄 Processing Customers...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034417Z","level":"info","event":"   Clean customers: 500 rows","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034434Z","level":"info","event":"   ✅ Customers saved","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034456Z","level":"info","event":"==================================================","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034474Z","level":"info","event":"🎉 Silver Layer Complete!","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.034491Z","level":"info","event":"","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.035799Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator","filename":"python.py","lineno":230}
+{"timestamp":"2026-03-10T00:33:43.046682Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.046761Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:33:43.047673Z","level":"info","event":"Task operator:<Task(PythonOperator): silver_transform>","logger":"task.stdout"}

@@ -1,0 +1,17 @@
+venv311/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+airflow/logs/
+airflow/airflow.db
+airflow/airflow.db-shm
+airflow/airflow.db-wal
+airflow/simple_auth_manager_passwords.json.generated
+data/raw/
+data/processed/
+*.parquet
+*.jar
+.DS_Store
+venv311/

@@ -1,0 +1,24 @@
+{"timestamp":"2026-03-10T00:55:20.914291Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2026-03-10T00:55:20.914581Z","level":"info","event":"Filling up the DagBag from /Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","logger":"airflow.models.dagbag.BundleDagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-03-10T00:55:20.920173Z","level":"warning","event":"The `airflow.operators.python.PythonOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.python.PythonOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":2,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:55:20.920274Z","level":"warning","event":"The `airflow.operators.bash.BashOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.bash.BashOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":3,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:55:20.956721Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:20.956885Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:20.957391Z","level":"info","event":"Current task name:silver_transform","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:20.957483Z","level":"info","event":"Dag name:uber_trip_pipeline","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.440626Z","level":"info","event":"✅ Starting Silver Layer transformation (pandas)","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.441109Z","level":"info","event":"🔄 Processing Trips...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.441155Z","level":"info","event":"   ✅ Trips saved: 10000 rows","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.441181Z","level":"info","event":"🔄 Processing Drivers...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.441203Z","level":"info","event":"   ✅ Drivers saved: 200 rows","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.441228Z","level":"info","event":"🔄 Processing Customers...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.441257Z","level":"info","event":"   ✅ Customers saved: 500 rows","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.441277Z","level":"info","event":"==================================================","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.441295Z","level":"info","event":"🎉 Silver Layer Complete!","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.441313Z","level":"info","event":"   📂 Location: data/processed/silver_*/","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.441331Z","level":"info","event":"==================================================","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.441349Z","level":"info","event":"","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.440998Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator","filename":"python.py","lineno":230}
+{"timestamp":"2026-03-10T00:55:21.460621Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.460778Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:55:21.461710Z","level":"info","event":"Task operator:<Task(PythonOperator): silver_transform>","logger":"task.stdout"}

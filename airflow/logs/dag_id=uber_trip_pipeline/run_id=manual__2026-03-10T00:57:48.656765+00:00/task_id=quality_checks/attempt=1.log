@@ -1,0 +1,13 @@
+{"timestamp":"2026-03-10T00:57:52.449427Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2026-03-10T00:57:52.449662Z","level":"info","event":"Filling up the DagBag from /Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","logger":"airflow.models.dagbag.BundleDagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-03-10T00:57:52.453063Z","level":"warning","event":"The `airflow.operators.python.PythonOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.python.PythonOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":2,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:57:52.453107Z","level":"warning","event":"The `airflow.operators.bash.BashOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.bash.BashOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":3,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:57:52.468870Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:57:52.468931Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:57:52.469298Z","level":"info","event":"Current task name:quality_checks","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:57:52.469335Z","level":"info","event":"Dag name:uber_trip_pipeline","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:57:52.489452Z","level":"info","event":"✅ Quality checks passed! (10000 rows)","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:57:52.489567Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator","filename":"python.py","lineno":230}
+{"timestamp":"2026-03-10T00:57:52.495682Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:57:52.495728Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:57:52.496032Z","level":"info","event":"Task operator:<Task(PythonOperator): quality_checks>","logger":"task.stdout"}

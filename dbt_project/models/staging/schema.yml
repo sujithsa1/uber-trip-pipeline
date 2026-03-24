@@ -1,0 +1,57 @@
+
+version: 2
+
+models:
+  - name: stg_trips
+    description: "Cleaned and standardized trip data"
+    columns:
+      - name: trip_id
+        description: "Unique trip identifier"
+        tests:
+          - unique
+          - not_null
+      - name: fare_amount
+        tests:
+          - not_null
+      - name: trip_status
+        tests:
+          - accepted_values:
+              values: ['completed', 'cancelled']
+
+  - name: stg_drivers
+    description: "Cleaned driver data"
+    columns:
+      - name: driver_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_customers
+    description: "Cleaned customer data"
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_trips
+    description: "Core fact table for all trips"
+    columns:
+      - name: trip_id
+        tests:
+          - unique
+          - not_null
+
+  - name: agg_zone_revenue
+    description: "Revenue aggregated by pickup zone"
+    columns:
+      - name: pickup_zone
+        tests:
+          - unique
+          - not_null
+
+  - name: agg_driver_performance
+    description: "Driver performance metrics"
+
+  - name: agg_hourly_demand
+    description: "Trip demand by hour of day"

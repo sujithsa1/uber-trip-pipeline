@@ -1,0 +1,28 @@
+{"timestamp":"2026-03-10T00:48:39.489176Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2026-03-10T00:48:39.489397Z","level":"info","event":"Filling up the DagBag from /Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","logger":"airflow.models.dagbag.BundleDagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-03-10T00:48:39.492876Z","level":"warning","event":"The `airflow.operators.python.PythonOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.python.PythonOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":2,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:48:39.492921Z","level":"warning","event":"The `airflow.operators.bash.BashOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.bash.BashOperator'`.","category":"DeprecatedImportWarning","filename":"/Users/sujithsuji/uber-trip-pipeline/airflow/dags/trip_pipeline_dag.py","lineno":3,"logger":"py.warnings"}
+{"timestamp":"2026-03-10T00:48:39.499466Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.499512Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.499759Z","level":"info","event":"Current task name:gold_transform","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.499782Z","level":"info","event":"Dag name:uber_trip_pipeline","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.949971Z","level":"info","event":"✅ Starting Gold Layer transformation (pandas)","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.950470Z","level":"info","event":"📂 Loaded 10000 silver trip records","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.950565Z","level":"info","event":"🔄 Building Daily Revenue Summary...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.950643Z","level":"info","event":"   ✅ Daily summary: 31 days","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.950703Z","level":"info","event":"🔄 Building Zone Revenue Performance...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.950755Z","level":"info","event":"   ✅ Zone performance: 8 zones","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.950811Z","level":"info","event":"🔄 Building Hourly Demand...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.950861Z","level":"info","event":"   ✅ Hourly demand: 24 hours","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.950910Z","level":"info","event":"🔄 Building Driver Performance...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.951016Z","level":"info","event":"   ✅ Driver performance: 200 drivers","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.951048Z","level":"info","event":"🔄 Building Surge Analysis...","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.951070Z","level":"info","event":"   ✅ Surge analysis complete","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.951091Z","level":"info","event":"==================================================","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.951111Z","level":"info","event":"🎉 Gold Layer Complete!","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.951138Z","level":"info","event":"==================================================","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.951156Z","level":"info","event":"","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:39.950690Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator","filename":"python.py","lineno":230}
+{"timestamp":"2026-03-10T00:48:40.083866Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:40.084342Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2026-03-10T00:48:40.089109Z","level":"info","event":"Task operator:<Task(PythonOperator): gold_transform>","logger":"task.stdout"}

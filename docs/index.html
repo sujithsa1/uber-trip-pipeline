@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uber Trip Analytics | Sujith</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0a0a0a; color:#fff; font-family:'Segoe UI',sans-serif; }
+  header { background:linear-gradient(135deg,#000,#1a1a2e); padding:60px 20px; text-align:center; border-bottom:2px solid #00d4aa; }
+  header h1 { font-size:3rem; color:#00d4aa; letter-spacing:3px; }
+  header p { color:#aaa; margin-top:10px; font-size:1.1rem; }
+  .badges { margin-top:20px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .badge { background:#1a1a2e; border:1px solid #00d4aa44; border-radius:20px; padding:5px 15px; font-size:0.8rem; color:#00d4aa; }
+  .metrics { display:grid; grid-template-columns:repeat(5,1fr); gap:20px; padding:40px; max-width:1400px; margin:0 auto; }
+  .metric-card { background:linear-gradient(135deg,#1a1a2e,#16213e); border:1px solid #00d4aa33; border-radius:15px; padding:25px; text-align:center; transition:transform 0.3s; }
+  .metric-card:hover { transform:translateY(-5px); border-color:#00d4aa; }
+  .metric-value { font-size:2rem; font-weight:900; color:#00d4aa; }
+  .metric-label { color:#888; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; margin-top:5px; }
+  .section { max-width:1400px; margin:0 auto; padding:20px 40px; }
+  .section-title { color:#00d4aa; font-size:1.3rem; font-weight:700; border-left:4px solid #00d4aa; padding-left:12px; margin-bottom:20px; }
+  .charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:40px; }
+  .chart-card { background:#0d1117; border:1px solid #222; border-radius:15px; padding:25px; }
+  .chart-card h3 { color:#fff; margin-bottom:15px; font-size:1rem; }
+  table { width:100%; border-collapse:collapse; background:#0d1117; border-radius:15px; overflow:hidden; margin-bottom:40px; }
+  th { background:#1a1a2e; color:#00d4aa; padding:15px; text-align:left; font-size:0.85rem; text-transform:uppercase; }
+  td { padding:12px 15px; border-bottom:1px solid #1a1a2e; color:#ddd; font-size:0.9rem; }
+  tr:hover td { background:#1a1a2e44; }
+  .stack { display:grid; grid-template-columns:repeat(5,1fr); gap:15px; padding:0 40px 40px; max-width:1400px; margin:0 auto; }
+  .stack-item { background:#1a1a2e; border:1px solid #00d4aa33; border-radius:10px; padding:20px; text-align:center; }
+  .stack-item h4 { color:#00d4aa; margin-bottom:8px; }
+  .stack-item p { color:#888; font-size:0.8rem; }
+  footer { text-align:center; padding:30px; color:#555; border-top:1px solid #1a1a2e; margin-top:20px; }
+  footer a { color:#00d4aa; text-decoration:none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🚗 UBER TRIP ANALYTICS</h1>
+  <p>End-to-end Cloud Data Pipeline — AWS S3 · PostgreSQL RDS · dbt · Apache Airflow</p>
+  <div class="badges">
+    <span class="badge">🐍 Python</span>
+    <span class="badge">🪣 AWS S3</span>
+    <span class="badge">🐘 PostgreSQL RDS</span>
+    <span class="badge">🔧 dbt</span>
+    <span class="badge">🌀 Airflow</span>
+    <span class="badge">✅ 12/12 Tests Passing</span>
+  </div>
+</header>
+
+<div class="metrics">
+  <div class="metric-card"><div class="metric-value">10,000</div><div class="metric-label">🚗 Total Trips</div></div>
+  <div class="metric-card"><div class="metric-value">$362,746</div><div class="metric-label">💰 Total Revenue</div></div>
+  <div class="metric-card"><div class="metric-value">74.8%</div><div class="metric-label">✅ Completion Rate</div></div>
+  <div class="metric-card"><div class="metric-value">$41.14</div><div class="metric-label">💵 Avg Fare</div></div>
+  <div class="metric-card"><div class="metric-value">12.8 mi</div><div class="metric-label">📏 Avg Distance</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">📊 Analytics Charts</div>
+  <div class="charts-grid">
+    <div class="chart-card"><h3>💰 Revenue by Pickup Zone</h3><canvas id="zoneChart"></canvas></div>
+    <div class="chart-card"><h3>⏰ Hourly Trip Demand</h3><canvas id="hourlyChart"></canvas></div>
+    <div class="chart-card"><h3>📈 Daily Revenue Trend</h3><canvas id="dailyChart"></canvas></div>
+    <div class="chart-card"><h3>🚦 Trip Status Breakdown</h3><canvas id="statusChart"></canvas></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">🏆 Top 10 Drivers Leaderboard</div>
+  <table id="driversTable"></table>
+  <div class="section-title">📍 Zone Performance</div>
+  <table id="zoneTable"></table>
+</div>
+
+<div class="section">
+  <div class="section-title">🛠️ Tech Stack</div>
+</div>
+<div class="stack">
+  <div class="stack-item"><h4>AWS S3</h4><p>Medallion Architecture Bronze/Silver/Gold</p></div>
+  <div class="stack-item"><h4>PostgreSQL RDS</h4><p>Cloud Data Warehouse 7 Tables</p></div>
+  <div class="stack-item"><h4>dbt</h4><p>7 Models 12 Tests Passing</p></div>
+  <div class="stack-item"><h4>Apache Airflow</h4><p>8-Task DAG Daily Schedule</p></div>
+  <div class="stack-item"><h4>Python + Pandas</h4><p>ETL Pipeline 10K Records/Day</p></div>
+</div>
+
+<footer>
+  Built by Sujith &nbsp;|&nbsp;
+  <a href="https://github.com/sujithsa1/uber-trip-pipeline">GitHub Repository</a>
+</footer>
+
+<script>
+const zoneData = [{"pickup_zone":"AIRPORT","total_revenue":49737.63,"total_trips":1023},{"pickup_zone":"HARLEM","total_revenue":47191.58,"total_trips":962},{"pickup_zone":"STATEN ISLAND","total_revenue":45543.21,"total_trips":920},{"pickup_zone":"QUEENS","total_revenue":45521.01,"total_trips":950},{"pickup_zone":"DOWNTOWN","total_revenue":45238.64,"total_trips":897},{"pickup_zone":"MIDTOWN","total_revenue":44649.97,"total_trips":932},{"pickup_zone":"BRONX","total_revenue":42504.51,"total_trips":917},{"pickup_zone":"BROOKLYN","total_revenue":42359.54,"total_trips":883}];
+const hourlyData = [{"hour_of_day":0,"total_trips":414},{"hour_of_day":1,"total_trips":406},{"hour_of_day":2,"total_trips":452},{"hour_of_day":3,"total_trips":440},{"hour_of_day":4,"total_trips":439},{"hour_of_day":5,"total_trips":417},{"hour_of_day":6,"total_trips":401},{"hour_of_day":7,"total_trips":455},{"hour_of_day":8,"total_trips":403},{"hour_of_day":9,"total_trips":449},{"hour_of_day":10,"total_trips":413},{"hour_of_day":11,"total_trips":431},{"hour_of_day":12,"total_trips":396},{"hour_of_day":13,"total_trips":390},{"hour_of_day":14,"total_trips":391},{"hour_of_day":15,"total_trips":393},{"hour_of_day":16,"total_trips":440},{"hour_of_day":17,"total_trips":407},{"hour_of_day":18,"total_trips":397},{"hour_of_day":19,"total_trips":393},{"hour_of_day":20,"total_trips":432},{"hour_of_day":21,"total_trips":399},{"hour_of_day":22,"total_trips":409},{"hour_of_day":23,"total_trips":433}];
+const dailyData = [{"trip_date":"2026-02-07","total_revenue":1364.14},{"trip_date":"2026-02-08","total_revenue":11276.11},{"trip_date":"2026-02-09","total_revenue":13020.42},{"trip_date":"2026-02-10","total_revenue":12777.3},{"trip_date":"2026-02-11","total_revenue":12253.78},{"trip_date":"2026-02-12","total_revenue":12185.59},{"trip_date":"2026-02-13","total_revenue":12392.56},{"trip_date":"2026-02-14","total_revenue":12839.95},{"trip_date":"2026-02-15","total_revenue":11915.74},{"trip_date":"2026-02-16","total_revenue":11955.88},{"trip_date":"2026-02-17","total_revenue":11754.52},{"trip_date":"2026-02-18","total_revenue":10501.93},{"trip_date":"2026-02-19","total_revenue":12832.93},{"trip_date":"2026-02-20","total_revenue":12062.95},{"trip_date":"2026-02-21","total_revenue":11172.85},{"trip_date":"2026-02-22","total_revenue":11272.1},{"trip_date":"2026-02-23","total_revenue":12269.6},{"trip_date":"2026-02-24","total_revenue":12800.69},{"trip_date":"2026-02-25","total_revenue":12950.91},{"trip_date":"2026-02-26","total_revenue":15144.4},{"trip_date":"2026-02-27","total_revenue":11399.08},{"trip_date":"2026-02-28","total_revenue":12086.78},{"trip_date":"2026-03-01","total_revenue":10629.62},{"trip_date":"2026-03-02","total_revenue":12494.4},{"trip_date":"2026-03-03","total_revenue":12744.1},{"trip_date":"2026-03-04","total_revenue":11616.63},{"trip_date":"2026-03-05","total_revenue":10868.75},{"trip_date":"2026-03-06","total_revenue":11953.46},{"trip_date":"2026-03-07","total_revenue":10601.99},{"trip_date":"2026-03-08","total_revenue":12999.01},{"trip_date":"2026-03-09","total_revenue":10607.92}];
+const driversData = [{"driver_id":"DRV1197","total_trips":65,"total_earnings":2812.74,"completion_rate":78.5},{"driver_id":"DRV1022","total_trips":67,"total_earnings":2788.01,"completion_rate":86.6},{"driver_id":"DRV1053","total_trips":65,"total_earnings":2757.14,"completion_rate":83.1},{"driver_id":"DRV1128","total_trips":60,"total_earnings":2720.82,"completion_rate":81.7},{"driver_id":"DRV1076","total_trips":69,"total_earnings":2719.22,"completion_rate":75.4},{"driver_id":"DRV1163","total_trips":58,"total_earnings":2701.58,"completion_rate":82.8},{"driver_id":"DRV1001","total_trips":63,"total_earnings":2642.61,"completion_rate":81.0},{"driver_id":"DRV1066","total_trips":72,"total_earnings":2623.32,"completion_rate":70.8},{"driver_id":"DRV1118","total_trips":56,"total_earnings":2551.85,"completion_rate":85.7},{"driver_id":"DRV1074","total_trips":56,"total_earnings":2507.78,"completion_rate":82.1}];
+
+new Chart(document.getElementById('zoneChart'), {
+  type:'bar',
+  data:{ labels:zoneData.map(d=>d.pickup_zone), datasets:[{ data:zoneData.map(d=>d.total_revenue), backgroundColor:'#00d4aa44', borderColor:'#00d4aa', borderWidth:2, borderRadius:5 }] },
+  options:{ responsive:true, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#aaa'},grid:{color:'#222'}}, y:{ticks:{color:'#aaa'},grid:{color:'#222'}} } }
+});
+
+new Chart(document.getElementById('hourlyChart'), {
+  type:'line',
+  data:{ labels:hourlyData.map(d=>d.hour_of_day+':00'), datasets:[{ data:hourlyData.map(d=>d.total_trips), borderColor:'#00d4aa', backgroundColor:'rgba(0,212,170,0.1)', fill:true, tension:0.4, pointBackgroundColor:'#00d4aa' }] },
+  options:{ responsive:true, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#aaa'},grid:{color:'#222'}}, y:{ticks:{color:'#aaa'},grid:{color:'#222'}} } }
+});
+
+new Chart(document.getElementById('dailyChart'), {
+  type:'line',
+  data:{ labels:dailyData.map(d=>d.trip_date), datasets:[{ data:dailyData.map(d=>d.total_revenue), borderColor:'#00d4aa', backgroundColor:'rgba(0,212,170,0.1)', fill:true, tension:0.4 }] },
+  options:{ responsive:true, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#aaa', maxTicksLimit:7},grid:{color:'#222'}}, y:{ticks:{color:'#aaa'},grid:{color:'#222'}} } }
+});
+
+new Chart(document.getElementById('statusChart'), {
+  type:'doughnut',
+  data:{ labels:['Completed','Cancelled'], datasets:[{ data:[7483,2517], backgroundColor:['#00d4aa','#ff4757'], borderWidth:0 }] },
+  options:{ responsive:true, plugins:{legend:{labels:{color:'#aaa'}}} }
+});
+
+const dt = document.getElementById('driversTable');
+dt.innerHTML = '<tr><th>#</th><th>Driver ID</th><th>Total Trips</th><th>Total Earnings</th><th>Completion Rate</th></tr>';
+driversData.forEach((d,i) => {
+  dt.innerHTML += `<tr><td>${i+1}</td><td>${d.driver_id}</td><td>${d.total_trips}</td><td>$${d.total_earnings.toFixed(2)}</td><td>${d.completion_rate.toFixed(1)}%</td></tr>`;
+});
+
+const zt = document.getElementById('zoneTable');
+zt.innerHTML = '<tr><th>Zone</th><th>Total Trips</th><th>Total Revenue</th><th>Avg Revenue/Trip</th></tr>';
+zoneData.forEach(d => {
+  zt.innerHTML += `<tr><td>${d.pickup_zone}</td><td>${d.total_trips}</td><td>$${d.total_revenue.toFixed(0)}</td><td>$${(d.total_revenue/d.total_trips).toFixed(2)}</td></tr>`;
+});
+</script>
+</body>
+</html>
