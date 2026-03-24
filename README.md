@@ -1,15 +1,17 @@
 <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=28&pause=1000&color=3B82F6&center=true&vCenter=true&width=600&lines=Uber+Trip+Analytics+Pipeline" alt="Typing SVG" />
 
 ### End-to-end cloud data pipeline — ingestion, transformation, warehousing & orchestration
-
+</div>
+<div align="center">
+  <img alt="Uber Pipeline" src="https://img.shields.io/badge/Uber%20Data%20Pipeline-000000?style=for-the-badge&logo=uber&logoColor=white" />
+<div align="center">
+<div align="center">
 ![AWS](https://img.shields.io/badge/AWS-S3%20%7C%20RDS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
 ![PySpark](https://img.shields.io/badge/PySpark-4.1-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
 ![dbt](https://img.shields.io/badge/dbt-1.11-FF694B?style=for-the-badge&logo=dbt&logoColor=white)
 ![Airflow](https://img.shields.io/badge/Airflow-3.0-017CEE?style=for-the-badge&logo=apacheairflow&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-RDS-336791?style=for-the-badge&logo=postgresql&logoColor=white)
-
-</div>
 
 ---
 
