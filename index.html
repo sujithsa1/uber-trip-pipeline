@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uber Trip Analytics Pipeline | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            /* Apple Glassmorphism Light Theme */
+            --bg-body: #fbfbfd;
+            --accent: #0071e3; /* Classic Apple macOS Blue */
+            --text-main: #1d1d1f; /* Charcoal Black */
+            --text-muted: #86868b; /* Apple System Gray */
+            
+            /* Glass properties */
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-bg-hover: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
+            
+            --bronze: #a66f44;
+            --silver: #86868b;
+            --gold: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            background: var(--bg-body);
+        }
+
+        /* Ambient Dynamic Background for Glass to Blur over */
+        .ambient-mac-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .ambient-mac-bg::before, .ambient-mac-bg::after, .ambient-orb {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.6;
+            z-index: -1;
+        }
+        .ambient-mac-bg::before {
+            width: 800px; height: 800px;
+            background: rgba(0, 113, 227, 0.15); /* Apple Blue */
+            top: -200px; left: -200px;
+            animation: drift1 20s infinite alternate ease-in-out;
+        }
+        .ambient-mac-bg::after {
+            width: 900px; height: 900px;
+            background: rgba(138, 43, 226, 0.12); /* Subtle Purple */
+            bottom: -300px; right: -100px;
+            animation: drift2 25s infinite alternate ease-in-out;
+        }
+        .ambient-orb {
+            width: 600px; height: 600px;
+            background: rgba(52, 199, 89, 0.1); /* iOS Green */
+            top: 40%; left: 40%;
+            animation: drift3 18s infinite alternate ease-in-out;
+        }
+
+        @keyframes drift1 { 0% { transform: translate(0, 0); } 100% { transform: translate(100px, 150px); } }
+        @keyframes drift2 { 0% { transform: translate(0, 0); } 100% { transform: translate(-150px, -100px); } }
+        @keyframes drift3 { 0% { transform: translate(0, 0); } 100% { transform: translate(-100px, 100px); } }
+
+        .container {
+            max-width: 1400px;
+            width: 92%;
+            margin: 0 auto;
+        }
+
+        section { padding: 48px 0; border-bottom: 1px solid rgba(0,0,0,0.03); }
+        section:last-of-type { border-bottom: none; }
+
+        .section-header { margin-bottom: 32px; text-align: left;}
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #1d1d1f 0%, var(--accent) 50%, #1d1d1f 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: titleShimmer 5s linear infinite;
+            display: inline-block;
+        }
+        .section-header p { font-size: 1.1rem; color: var(--text-muted); }
+
+        @keyframes titleShimmer { to { background-position: 200% center; } }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 15px rgba(0, 113, 227, 0.3);
+        }
+        .btn-primary:hover { 
+            background: #005bb5; 
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 113, 227, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+        .btn-secondary:hover { 
+            background: rgba(255, 255, 255, 0.9); 
+            transform: translateY(-3px) scale(1.02); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        /* Hero */
+        #hero {
+            padding: 80px 0 48px;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+            position: relative;
+        }
+
+        #hero h1 {
+            font-size: clamp(3rem, 5vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+            margin-bottom: 16px;
+        }
+        
+        #hero h1 span { color: var(--accent); }
+
+        #hero .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-bottom: 32px;
+            font-weight: 500;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(28px) saturate(200%);
+            -webkit-backdrop-filter: blur(28px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .glass-card:hover {
+            background: var(--glass-bg-hover);
+            border-color: rgba(0, 113, 227, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.08), 0 0 20px rgba(0,113,227,0.1);
+        }
+
+        /* Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .metric-item { text-align: left; }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+        .metric-label { color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+        /* Pipeline Steps */
+        .pipeline-wrapper { max-width: 800px; }
+        .pipeline-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .pipeline-step:last-child { margin-bottom: 0; }
+        .pipeline-step:hover {
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(12px);
+            border-color: rgba(255,255,255,0.8);
+            transform: translateX(8px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .step-number {
+            width: 48px; height: 48px;
+            background: rgba(255,255,255,0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; font-weight: 700; color: var(--text-main);
+            flex-shrink: 0;
+            margin-right: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            backdrop-filter: blur(10px);
+        }
+        .pipeline-step:hover .step-number {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 6px 15px rgba(0, 113, 227, 0.3);
+        }
+        .step-content h3 { font-size: 1.25rem; margin-bottom: 4px; transition: color 0.3s ease; }
+        .pipeline-step:hover .step-content h3 { color: var(--accent); }
+        .step-content p { color: var(--text-muted); font-size: 1rem; }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes pulse-border {
+            0% { border-color: rgba(0, 113, 227, 0.2); box-shadow: 0 0 0 rgba(0, 113, 227, 0); }
+            50% { border-color: var(--accent); box-shadow: 0 0 12px rgba(0, 113, 227, 0.3); }
+            100% { border-color: rgba(0, 113, 227, 0.2); box-shadow: 0 0 0 rgba(0, 113, 227, 0); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        
+        /* Reveal class for JS observer */
+        .anim-reveal {
+            opacity: 0;
+            transform: translateY(30px) scale(0.98);
+            transition: opacity 0.7s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+            will-change: opacity, transform;
+        }
+        .anim-reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        .name-highlight {
+            background: linear-gradient(90deg, #ff007a, #0071e3, #00f2fe, #0071e3, #ff007a);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            filter: drop-shadow(0 4px 12px rgba(0, 113, 227, 0.4));
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        /* DAG */
+        .dag-container { overflow-x: auto; padding: 24px; }
+        .dag-flow {
+            display: flex;
+            align-items: center;
+            min-width: max-content;
+        }
+        .dag-node {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 16px;
+            min-width: 150px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .dag-node:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+            border-color: var(--accent);
+            background: #ffffff;
+            z-index: 2;
+        }
+        .dag-node h4 { font-size: 0.95rem; margin-bottom: 8px; font-family: 'Fira Code', monospace;}
+        
+        .status-badge { font-size: 0.8rem; padding: 2px 8px; border-radius: 6px; font-weight: 600; display: inline-block; transition: all 0.3s;}
+        .status-badge.success { color: #15803d; background: rgba(21, 128, 61, 0.1); }
+        .status-badge.running { color: var(--accent); background: rgba(0, 113, 227, 0.1); animation: pulse-border 2s infinite; }
+        .status-badge.waiting { color: #4b5563; background: #e5e5ea; }
+
+        .dag-arrow { width: 30px; height: 1px; background: rgba(0,0,0,0.2); position: relative; transition: all 0.3s ease; }
+        .dag-arrow::after { content: ''; position: absolute; right: 0; top: -3px; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 5px solid rgba(0,0,0,0.2); transition: all 0.3s;}
+        
+        .dag-node:hover + .dag-arrow { background: var(--accent); }
+        .dag-node:hover + .dag-arrow::after { border-left-color: var(--accent); }
+
+        /* Dashboard Interface */
+        .dash-layout { display: grid; grid-template-columns: 200px 1fr; border-radius: 16px; overflow: hidden; }
+        .dash-layout:hover { box-shadow: 0 24px 32px -8px rgba(0,0,0,0.08); }
+
+        @media (max-width: 800px) { .dash-layout { grid-template-columns: 1fr; } .dash-sidebar { display: none; } }
+        
+        .dash-sidebar { padding: 24px; background: rgba(255,255,255,0.4); border-right: 1px solid var(--glass-border); }
+        .dash-nav { list-style: none; }
+        .dash-nav li { padding: 8px 12px; color: var(--text-muted); font-weight: 500; font-size: 0.9rem; border-radius: 8px; margin-bottom: 4px; transition: all 0.2s; cursor: pointer;}
+        .dash-nav li:hover:not(.active) { background: rgba(255,255,255,0.7); color: var(--text-main); transform: translateX(4px); }
+        .dash-nav li.active { background: rgba(0,0,0,0.06); color: var(--text-main); font-weight: 600; }
+
+        .dash-main { padding: 24px; background: rgba(255,255,255,0.75); }
+        .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        @media (max-width: 1000px) { .dash-grid { grid-template-columns: 1fr; } }
+        
+        .dash-widget { background: #ffffff; border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px; transition: all 0.3s; box-shadow: 0 2px 10px rgba(0,0,0,0.02);}
+        .dash-widget:hover { border-color: rgba(0,0,0,0.1); transform: translateY(-3px); box-shadow: 0 12px 20px rgba(0,0,0,0.06); }
+        .widget-title { font-size: 0.95rem; color: var(--text-main); margin-bottom: 16px; font-weight: 600;}
+        
+        .chart-container { position: relative; height: 250px; width: 100%; transition: opacity 0.3s;}
+        
+        .dash-table { width: 100%; border-collapse: collapse; }
+        .dash-table th { text-align: left; padding: 8px; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; border-bottom: 1px solid rgba(0,0,0,0.05);}
+        .dash-table td { padding: 12px 8px; color: var(--text-main); border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.9rem; transition: background 0.2s;}
+        .dash-table tr { transition: background 0.2s;}
+        .dash-table tr:hover td { background: rgba(0,0,0,0.02); }
+        .dash-table tr:last-child td { border-bottom: none; }
+        .tbl-val { font-family: 'Fira Code', monospace; color: var(--text-main); font-weight: 600; }
+
+        /* Medallion */
+        .medallion-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        @media (max-width: 800px) { .medallion-grid { grid-template-columns: 1fr; } }
+        
+        .medallion-layer { padding: 24px; border-top: 4px solid; animation: float 6s ease-in-out infinite; transition: all 0.3s; }
+        /* Add delays so they don't float uniformly */
+        .ml-bronze { border-top-color: var(--bronze); animation-delay: 0s; }
+        .ml-silver { border-top-color: var(--silver); animation-delay: -2s; }
+        .ml-gold { border-top-color: var(--gold); animation-delay: -4s; }
+        
+        .medallion-layer:hover {
+            transform: translateY(-8px) scale(1.03) !important;
+            animation-play-state: paused;
+            box-shadow: 0 20px 30px -5px rgba(0,0,0,0.08);
+            border-color: rgba(0,0,0,0.1);
+            background: #ffffff;
+        }
+        
+        .medallion-layer h3 { font-size: 1.4rem; margin-bottom: 8px; transition: color 0.3s; color: var(--text-main);}
+        .medallion-layer:hover h3 { color: var(--accent); }
+        .medallion-layer p { color: var(--text-muted); margin-bottom: 16px; font-size: 0.95rem;}
+        .medallion-layer ul { list-style: none; padding-left: 0; }
+        .medallion-layer li { margin-bottom: 8px; color: #4b5563; font-size: 0.9rem; transition: transform 0.2s;}
+        .medallion-layer:hover li { transform: translateX(4px); color: var(--text-main); }
+        .medallion-layer li::before { content: '•'; color: var(--text-muted); margin-right: 8px; }
+
+        /* Repo Structure */
+        .tree-line { display: flex; padding: 6px 8px; font-family: 'Fira Code', monospace; font-size: 0.9rem; align-items: center; border-radius: 8px; transition: all 0.2s;}
+        .tree-line:hover { background: rgba(255,255,255,0.7); backdrop-filter: blur(8px); transform: translateX(6px); box-shadow: 0 2px 5px rgba(0,0,0,0.03);}
+        .t-icon { margin-right: 12px; color: var(--text-muted); transition: transform 0.2s;}
+        .tree-line:hover .t-icon { transform: scale(1.2); }
+        .t-name { font-weight: 500; color: var(--text-main); width: 220px; }
+        .t-desc { color: var(--text-muted); }
+
+        /* Badges */
+        .tech-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+        .badge { padding: 8px 16px; border-radius: 10px; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); font-size: 0.95rem; font-weight: 500; color: var(--text-main); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: default;}
+        .badge:hover { transform: scale(1.1) rotate(2deg); border-color: rgba(0,0,0,0.1); background: #ffffff; box-shadow: 0 6px 15px rgba(0,0,0,0.06);}
+        
+        /* Resume */
+        .resume-block ul { list-style: none; }
+        .resume-block li { padding-left: 24px; position: relative; margin-bottom: 12px; font-size: 1rem; color: #4b5563; transition: all 0.3s;}
+        .resume-block li:hover { color: var(--text-main); transform: translateX(6px); }
+        .resume-block li strong { color: var(--text-main); transition: color 0.3s;}
+        .resume-block li:hover strong { color: var(--accent); }
+        .resume-block li::before { content: '▹'; position: absolute; left: 0; top: 0; color: var(--text-muted); transition: transform 0.3s, color 0.3s; }
+        .resume-block li:hover::before { transform: translateX(4px) scale(1.2); color: var(--accent); }
+
+        footer { text-align: left; padding: 48px 0; color: var(--text-muted); font-size: 0.9rem;}
+        footer a { color: var(--text-main); text-decoration: none; transition: color 0.2s;}
+        footer a:hover { text-decoration: underline; color: var(--accent); }
+    </style>
+</head>
+<body>
+    
+    <!-- Ambient Mac Wallpaper Core -->
+    <div class="ambient-mac-bg">
+        <div class="ambient-orb"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <header id="hero" class="anim-reveal">
+        <div class="container">
+            <h1>Uber Trip Analytics <span style="display:inline-block; animation: float 4s ease-in-out infinite;">Pipeline</span></h1>
+            <p class="subtitle">
+                An end-to-end data engineering pipeline transforming raw trip logs into robust business insights. 
+                Built natively for scale and observability.
+            </p>
+            <div style="display: flex; gap: 16px; margin-bottom: 40px;">
+                <a href="#dashboard" class="btn btn-primary">View Dashboard</a>
+                <a href="https://github.com/SubhikshaRavichandran/uber-trip-pipeline" target="_blank" class="btn btn-secondary">Source Code</a>
+            </div>
+            <p style="color: var(--text-muted); font-size: 1.1rem; font-weight: 500;">Project built by <br><span class="name-highlight">Subhiksha Ravichandran</span></p>
+        </div>
+    </header>
+
+    <!-- Metrics + Overview (Tight grouping) -->
+    <section>
+        <div class="container">
+            <div class="metrics-grid">
+                <div class="glass-card metric-item anim-reveal" style="transition-delay: 0s;">
+                    <div class="metric-value">10k+</div>
+                    <div class="metric-label">Daily Trip Records</div>
+                </div>
+                <div class="glass-card metric-item anim-reveal" style="transition-delay: 0.1s;">
+                    <div class="metric-value">7</div>
+                    <div class="metric-label">dbt Models Built</div>
+                </div>
+                <div class="glass-card metric-item anim-reveal" style="transition-delay: 0.2s;">
+                    <div class="metric-value">12</div>
+                    <div class="metric-label">Data Quality Tests</div>
+                </div>
+                <div class="glass-card metric-item anim-reveal" style="transition-delay: 0.3s;">
+                    <div class="metric-value">8</div>
+                    <div class="metric-label">Task Airflow DAG</div>
+                </div>
+            </div>
+            
+            <div style="max-width: 800px;" class="anim-reveal">
+                <p style="color: #4b5563; font-size: 1.05rem;">
+                    This highly-scalable solution processes raw Uber trip logs, executing null-filtering and data type standardization. The pipeline logically tiers data using a medallion architecture, guaranteeing deterministic output routing into the PostgreSQL warehouse for downstream analytics.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pipeline Process -->
+    <section id="pipeline" class="anim-reveal">
+        <div class="container">
+            <div class="section-header">
+                <h2>Pipeline Workflow</h2>
+            </div>
+            <div class="pipeline-wrapper">
+                <div class="pipeline-step">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>Raw Data Ingestion</h3>
+                        <p>Raw CSV files securely staged in AWS S3 Data Lakes.</p>
+                    </div>
+                </div>
+                <div class="pipeline-step">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>Cleaning & Standardization</h3>
+                        <p>Handling null values and correcting timestamps via Pandas/PySpark.</p>
+                    </div>
+                </div>
+                <div class="pipeline-step">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>Silver Layer Processing</h3>
+                        <p>Validated schemas loaded into the processed Silver bucket.</p>
+                    </div>
+                </div>
+                <div class="pipeline-step">
+                    <div class="step-number">04</div>
+                    <div class="step-content">
+                        <h3>Gold Layer Aggregation</h3>
+                        <p>Business dimensions aggregated for low-latency BI queries.</p>
+                    </div>
+                </div>
+                <div class="pipeline-step">
+                    <div class="step-number">05</div>
+                    <div class="step-content">
+                        <h3>Serving & Analytics</h3>
+                        <p>Final metrics synced to PostgreSQL data warehouse powering dashboards.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Airflow DAG -->
+    <section id="orchestration" class="anim-reveal">
+        <div class="container">
+            <div class="section-header">
+                <h2>Airflow Orchestration</h2>
+            </div>
+            
+            <div class="glass-card dag-container" style="padding:0;">
+                <div class="dag-flow" style="padding: 24px;">
+                    <div class="dag-node">
+                        <h4>generate_data</h4>
+                        <span class="status-badge success">Success</span>
+                    </div>
+                    <div class="dag-arrow"></div>
+                    
+                    <div class="dag-node">
+                        <h4>quality_checks</h4>
+                        <span class="status-badge success">Success</span>
+                    </div>
+                    <div class="dag-arrow"></div>
+                    
+                    <div class="dag-node">
+                        <h4>upload_s3</h4>
+                        <span class="status-badge success">Success</span>
+                    </div>
+                    <div class="dag-arrow"></div>
+                    
+                    <div class="dag-node">
+                        <h4>silver_transform</h4>
+                        <span class="status-badge success">Success</span>
+                    </div>
+                    <div class="dag-arrow"></div>
+                    
+                    <div class="dag-node">
+                        <h4>gold_transform</h4>
+                        <span class="status-badge success">Success</span>
+                    </div>
+                    <div class="dag-arrow"></div>
+                    
+                    <div class="dag-node">
+                        <h4>load_postgres</h4>
+                        <span class="status-badge success">Success</span>
+                    </div>
+                    <div class="dag-arrow"></div>
+                    
+                    <div class="dag-node">
+                        <h4>dbt_run</h4>
+                        <span class="status-badge running">Running</span>
+                    </div>
+                    <div class="dag-arrow"></div>
+                    
+                    <div class="dag-node">
+                        <h4>dbt_test</h4>
+                        <span class="status-badge waiting">Waiting</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard UI -->
+    <section id="dashboard" class="anim-reveal">
+        <div class="container">
+            <div class="section-header">
+                <h2>Analytics Dashboard View</h2>
+            </div>
+            
+            <div class="glass-card dash-layout" style="padding:0;">
+                <div class="dash-sidebar">
+                    <div style="color: var(--text-main); font-size: 1.1rem; font-weight: 600; margin-bottom: 24px; transition: color 0.3s; cursor: pointer;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-main)'">Uber BI Dashboard</div>
+                    <ul class="dash-nav">
+                        <li class="active">Overview</li>
+                        <li>Revenue Metrics</li>
+                        <li>Trip Status</li>
+                        <li>Driver Performance</li>
+                    </ul>
+                </div>
+                <div class="dash-main">
+                    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 24px; color:var(--text-main);">Executive Overview</h2>
+                    
+                    <div class="dash-grid">
+                        <div class="dash-widget" style="grid-column: 1 / -1;">
+                            <div class="widget-title">Daily Revenue Trend</div>
+                            <div class="chart-container" style="height: 250px;">
+                                <canvas id="chartTrend"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="dash-widget">
+                            <div class="widget-title">Revenue by Zone</div>
+                            <div class="chart-container" style="height: 200px;">
+                                <canvas id="chartZone"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="dash-widget">
+                            <div class="widget-title">Trip Status Distribution</div>
+                            <div class="chart-container" style="height: 200px;">
+                                <canvas id="chartStatus"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="dash-widget" style="grid-column: 1 / -1; padding-bottom: 4px;">
+                            <div class="widget-title" style="margin-bottom: 8px;">Top Performing Drivers</div>
+                            <div style="overflow-x: auto;">
+                                <table class="dash-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Driver Rank</th>
+                                            <th>Total Trips</th>
+                                            <th>Completion</th>
+                                            <th>Avg Rating</th>
+                                            <th>Total Revenue</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong style="color:var(--text-main);">1. DRV-8492</strong></td>
+                                            <td>142</td><td>98.5%</td><td>4.98</td><td class="tbl-val">$2,140.50</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong style="color:var(--text-main);">2. DRV-1023</strong></td>
+                                            <td>138</td><td>97.1%</td><td>4.95</td><td class="tbl-val">$1,980.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong style="color:var(--text-main);">3. DRV-5541</strong></td>
+                                            <td>125</td><td>99.0%</td><td>4.91</td><td class="tbl-val">$1,750.25</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong style="color:var(--text-main);">4. DRV-9932</strong></td>
+                                            <td>118</td><td>95.4%</td><td>4.88</td><td class="tbl-val">$1,620.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Medallion -->
+    <section id="architecture" class="anim-reveal">
+        <div class="container">
+            <div class="section-header">
+                <h2>Medallion Architecture</h2>
+            </div>
+            
+            <div class="medallion-grid">
+                <div class="glass-card medallion-layer ml-bronze">
+                    <h3>Bronze Layer</h3>
+                    <p>Raw Data Storage</p>
+                    <ul>
+                        <li>Raw CSV/JSON inputs</li>
+                        <li>Historical audit trail</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card medallion-layer ml-silver">
+                    <h3>Silver Layer</h3>
+                    <p>Cleaned & Validated</p>
+                    <ul>
+                        <li>Standardized schemas</li>
+                        <li>Null anomalies removed</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card medallion-layer ml-gold">
+                    <h3>Gold Layer</h3>
+                    <p>Business Aggregates</p>
+                    <ul>
+                        <li>Ready for Analytics</li>
+                        <li>KPI calculations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Structure Details -->
+    <section id="structure" class="anim-reveal">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+                
+                <div>
+                    <div class="section-header">
+                        <h2>Repository Structure</h2>
+                    </div>
+                    <div class="glass-card" style="padding: 16px;">
+                        <div class="tree-line"><span class="t-icon">📁</span><span class="t-name">/data/raw/</span></div>
+                        <div class="tree-line"><span class="t-icon">📁</span><span class="t-name">/data/processed/</span></div>
+                        <div class="tree-line"><span class="t-icon">📁</span><span class="t-name">/dags/</span></div>
+                        <div class="tree-line"><span class="t-icon">📁</span><span class="t-name">/dbt/</span></div>
+                        <div class="tree-line" style="margin-top:8px; border-top:1px solid rgba(0,0,0,0.05); padding-top:12px;"><span class="t-icon">📄</span><span class="t-name" style="color:#86868b;">bronze_to_silver.py</span></div>
+                        <div class="tree-line"><span class="t-icon">📄</span><span class="t-name" style="color:#86868b;">silver_to_gold.py</span></div>
+                        <div class="tree-line"><span class="t-icon">📄</span><span class="t-name">dashboard.py</span></div>
+                        <div class="tree-line"><span class="t-icon">📄</span><span class="t-name">README.md</span></div>
+                        
+                        <!-- Added GitHub link button in the empty space -->
+                        <div style="margin-top: 24px; text-align: center; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1);">
+                            <a href="https://github.com/SubhikshaRavichandran/uber-trip-pipeline" target="_blank" class="btn btn-secondary" style="width: 100%; color: #000;">
+                                <span style="margin-right:8px; font-size: 1.2rem;">★</span> View Full Code Repository
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-header">
+                        <h2>Tech Stack</h2>
+                    </div>
+                    <div class="tech-badges" style="margin-bottom: 32px;">
+                        <div class="badge">Python</div>
+                        <div class="badge">Pandas</div>
+                        <div class="badge">PySpark</div>
+                        <div class="badge">Amazon S3</div>
+                        <div class="badge">PostgreSQL</div>
+                        <div class="badge">dbt</div>
+                        <div class="badge">Apache Airflow</div>
+                        <div class="badge">Streamlit</div>
+                    </div>
+
+                    <div class="section-header">
+                        <h2>Key Outcomes</h2>
+                    </div>
+                    <div class="resume-block">
+                        <ul>
+                            <li><strong>Built an end-to-end pipeline</strong> processing 10,000+ daily records from S3 staging to BI presentation.</li>
+                            <li><strong>Implemented Medallion Architecture</strong>, enforcing schema governance and data lakehouse reliability.</li>
+                            <li><strong>Orchestrated automated scheduling</strong> via an 8-task Airflow DAG to execute and retry workflows.</li>
+                            <li><strong>Secured validity using dbt</strong> executing comprehensive SLA and referential integrity tests.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Designed and built by <strong>Subhiksha Ravichandran</strong></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // High-Performance Intersection Observer for revealing on scroll
+        document.addEventListener("DOMContentLoaded", () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: "0px",
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const animElements = document.querySelectorAll('.anim-reveal');
+            animElements.forEach(el => observer.observe(el));
+            
+            // Force first elements to be visible instantly
+            setTimeout(() => {
+                document.getElementById('hero').classList.add('is-visible');
+            }, 50);
+        });
+
+        // Chart.js Global Settings (Minimalist Light Variant)
+        Chart.defaults.color = '#86868b';
+        Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Inter', sans-serif";
+        Chart.defaults.scale.grid.color = 'rgba(0,0,0,0.05)';
+        Chart.defaults.plugins.tooltip.backgroundColor = '#1d1d1f';
+        Chart.defaults.plugins.tooltip.titleFont = { family: "-apple-system, sans-serif", size: 13 };
+
+        // 1. Daily Trend
+        const ctxTrend = document.getElementById('chartTrend').getContext('2d');
+        new Chart(ctxTrend, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [12500, 14200, 13800, 15100, 21000, 25500, 22400],
+                    borderColor: '#0071e3', // Apple Blue
+                    borderWidth: 2,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#0071e3',
+                    pointRadius: 3,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { border: { display: false }, ticks: { callback: function(v){ return '$' + v/1000 + 'k'; } } },
+                    x: { border: { display: false }, grid: { display: false } }
+                }
+            }
+        });
+
+        // 2. Zone Revenue
+        const ctxZone = document.getElementById('chartZone').getContext('2d');
+        new Chart(ctxZone, {
+            type: 'bar',
+            data: {
+                labels: ['Downtown', 'Airport', 'Uptown', 'Suburbs'],
+                datasets: [{
+                    data: [45, 32, 28, 15],
+                    backgroundColor: ['#0071e3', '#34c759', '#ff9500', '#8e8e93'], // Apple iOS Palette
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { border: { display: false }, ticks: { callback: function(v){ return v + 'k'; } } },
+                    x: { border: { display: false }, grid: { display: false } }
+                }
+            }
+        });
+
+        // 3. Trip Status
+        const ctxStatus = document.getElementById('chartStatus').getContext('2d');
+        new Chart(ctxStatus, {
+            type: 'doughnut',
+            data: {
+                labels: ['Completed', 'Canceled', 'No Show'],
+                datasets: [{
+                    data: [85, 12, 3],
+                    backgroundColor: ['#34c759', '#ff3b30', '#8e8e93'], // Green, Red, Gray
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: { 
+                    legend: { position: 'right', labels: { color: '#86868b', padding: 12, boxWidth: 12, font: {family: "-apple-system, sans-serif"} } } 
+                }
+            }
+        });
+    </script>
+</body>
+</html>
